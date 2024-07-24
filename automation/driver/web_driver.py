@@ -1,6 +1,6 @@
 import time
 from selenium import webdriver
-from abc import ABC
+from abc import ABC, abstractmethod
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.support.ui import WebDriverWait
@@ -24,27 +24,26 @@ class WebDriver(ABC):
             'class_name': By.CLASS_NAME,
             'css_selector': By.CSS_SELECTOR
         }
-        # self.clear_cache()
-        self.go_to()
+
+    @abstractmethod
+    def workflow(self):
+        pass
 
     @staticmethod
     def personal_options():
         options = Options()
         options.add_argument('--ignore-certificate-errors')
-        # options.add_argument("--headless")  # for the browser not to appear
         options.add_argument("--incognito")
-        # options.add_argument('--disable-gpu') if os.name == 'nt' else None  # windows workaround
-        # options.add_argument("--verbose")
         return options
 
     def clear_cache(self):
         self.find_by("xpath", "//settings-ui").send_keys(Keys.ENTER)
 
     def go_to(self, specific_url=None):
-        if specific_url is None:
-            self.web_driver.get(self.url)
-        else:
+        if specific_url is not None:
             self.web_driver.get(specific_url)
+
+        self.web_driver.get(self.url)
 
     def press_forward(self):
         self.web_driver.forward()

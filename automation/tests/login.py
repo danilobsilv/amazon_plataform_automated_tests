@@ -13,6 +13,9 @@ class Login(WebDriver):
         self.user = user
         self.url = url
 
+    def workflow(self):
+        pass
+
     # if this script goes to the 2FA page, then it worked
     def test_case_01(self):
 
