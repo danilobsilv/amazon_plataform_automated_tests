@@ -17,12 +17,12 @@ class WebDriver(ABC):
         self.web_driver = webdriver.Chrome(options=self.options)
         self.url = url
         self.__BY_DICT = {
-            'id': By.ID,
-            'name': By.NAME,
-            'xpath': By.XPATH,
-            'tag_name': By.TAG_NAME,
-            'class_name': By.CLASS_NAME,
-            'css_selector': By.CSS_SELECTOR
+            "id": By.ID,
+            "name": By.NAME,
+            "xpath": By.XPATH,
+            "tag_name": By.TAG_NAME,
+            "class_name": By.CLASS_NAME,
+            "css_selector": By.CSS_SELECTOR,
         }
 
     @abstractmethod
@@ -32,7 +32,7 @@ class WebDriver(ABC):
     @staticmethod
     def personal_options():
         options = Options()
-        options.add_argument('--ignore-certificate-errors')
+        options.add_argument("--ignore-certificate-errors")
         options.add_argument("--incognito")
         return options
 
@@ -57,12 +57,12 @@ class WebDriver(ABC):
     def find_by(self, by: str, value: str):
 
         by_dict = {
-            'id': By.ID,
-            'name': By.NAME,
-            'xpath': By.XPATH,
-            'tag_name': By.TAG_NAME,
-            'class_name': By.CLASS_NAME,
-            'css_selector': By.CSS_SELECTOR
+            "id": By.ID,
+            "name": By.NAME,
+            "xpath": By.XPATH,
+            "tag_name": By.TAG_NAME,
+            "class_name": By.CLASS_NAME,
+            "css_selector": By.CSS_SELECTOR,
         }
         if by not in self.__BY_DICT:
             raise ValueError(f"'{by}' locator is not supported.")
@@ -84,9 +84,15 @@ class WebDriver(ABC):
             raise ValueError(f"'{by}' locator is not supported.")
 
         wait = WebDriverWait(self.web_driver, timeout)
-        element = wait.until(EC.visibility_of_element_located((self.__BY_DICT[by], value)))
+        element = wait.until(
+            EC.visibility_of_element_located((self.__BY_DICT[by], value))
+        )
         return element
 
     @staticmethod
     def wait(seconds: int):
         time.sleep(seconds)
+
+    def close_browser(self):
+        """Fecha o navegador e encerra a sessão."""
+        self.web_driver.quit()

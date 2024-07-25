@@ -1,12 +1,13 @@
 import os
 from dotenv import load_dotenv
+
 load_dotenv()
 
 
 class UserData:
     def __init__(self):
         self._correct_login = os.getenv("CORRECT_AMAZON_LOGIN")
-        self._correct_password = os.getenv("correct_amazon_password")
+        self._correct_password = os.getenv("CORRECT_AMAZON_PASSWORD")
         self._incorrect_login = os.getenv("INCORRECT_AMAZON_LOGIN")
         self._incorrect_password = os.getenv("INCORRECT_AMAZON_PASSWORD")
 
