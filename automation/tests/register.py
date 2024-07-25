@@ -1,5 +1,5 @@
 import os
-
+from selenium.common.exceptions import TimeoutException, StaleElementReferenceException
 from automation.driver.web_driver import WebDriver
 from automation.data.user_data import UserData
 
@@ -8,30 +8,69 @@ class Register(WebDriver):
     def __init__(self, user: UserData, url: str):
         super().__init__(url)
         self.user = user
-        self.url = url
 
-    def test_case_03(self):
-        self.type_text("id", "ap_customer_name", os.getenv("FULL_NAME"))
-        self.type_text("id", "ap_email", os.getenv("PHONE_NUMBER"))
-        self.type_text("id", "ap_password", os.getenv("INCORRECT_AMAZON_PASSWORD"))
-        self.type_text("id", "ap_password_check", os.getenv("INCORRECT_AMAZON_PASSWORD"))
-        self.find_by("id", "continue").click()
+    def workflow(self):
+        self.go_to(self.url)  # Navega para a URL fornecida
 
-    def test_case_04(self, index):
-        action_flow = [
-            lambda: self.type_text("id", "ap_customer_name", os.getenv("FULL_NAME")),
-            lambda: self.type_text("id", "ap_email", os.getenv("PHONE_NUMBER")),
-            lambda: self.type_text("id", "ap_password", os.getenv("INCORRECT_AMAZON_PASSWORD")),
-            lambda: self.type_text("id", "ap_password_check", os.getenv("INCORRECT_AMAZON_PASSWORD")),
-            lambda: self.find_by("id", "continue").click()
-        ]
+    def test_case_04(self):
+        self.workflow()
+        try:
+            name_field = self.wait_until_element_visible("id", "ap_customer_name", 20)
+            if name_field is None:
+                raise Exception("Campo de name retornou None.")
+            name_field.send_keys(self.user.get_register_name())
+            print("Nome inserido com sucesso.")
+            
+        except TimeoutException:
+            raise Exception("Campo de nome não encontrado.")
+        except StaleElementReferenceException:
+            raise Exception("Campo de nome está desatualizado.")
 
-        if 0 <= index < len(action_flow):
-            action_flow.pop(index)
-        else:
-            raise IndexError("Index out of range")
+        try:
+            email_field = self.wait_until_element_visible("id", "ap_email", 20)
+            if email_field is None:
+                raise Exception("Campo de email retornou None.")
+            email_field.send_keys(self.user.get_register_name())
+            print("Email inserido com sucesso.")
+        except TimeoutException:
+            raise Exception("Campo de email não encontrado.")
+        except StaleElementReferenceException:
+            raise Exception("Campo de email está desatualizado.")
 
-        for action in action_flow:
-            action()
+        try:
+            password_field = self.wait_until_element_visible("id", "ap_password", 20)
+            if password_field is None:
+                raise Exception("Campo de senha retornou None.")
+            password_field.send_keys(self.user.get_correct_password())
+            print("Senha inserida com sucesso.")
+        except TimeoutException:
+            raise Exception("Campo de senha não encontrado.")
+        except StaleElementReferenceException:
+            raise Exception("Campo de senha está desatualizado.")
 
+        try:
+            sign_up_button = self.wait_until_element_visible("id", "continue", 20)
+            if sign_up_button is None:
+                raise Exception("Botão de criar conta retornou None.")
+            sign_up_button.click()
+            print("Botão de criar conta clicado com sucesso.")
+        except TimeoutException:
+            raise Exception("Botão de criar conta não encontrado.")
+        except StaleElementReferenceException:
+            raise Exception("Botão de criar conta está desatualizado.")
+        
+        try:
+            error_message = self.wait_until_element_visible(
+                "id", "auth-error-message-box", 20
+            )
+            if error_message is None:
+                raise Exception("Mensagem de erro retornou None.")
+            print("Mensagem de erro para todos os campos devem ser preenchidos encontrada com sucesso.")
+        except TimeoutException:
+            raise Exception("Mensagem de erro não encontrada.")
+        except StaleElementReferenceException:
+            raise Exception("Mensagem de erro está desatualizada.")
+
+    def close_browser(self):
+        self.web_driver.quit()
 
