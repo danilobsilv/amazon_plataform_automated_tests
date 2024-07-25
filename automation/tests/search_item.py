@@ -11,7 +11,7 @@ class SearchItem(WebDriver):
     def workflow(self):
         self.go_to(self.url)  # Navega para a URL fornecida
 
-    def test_case_search(self):
+    def test_case_05(self):
         self.workflow()
 
         try:
