@@ -20,7 +20,7 @@ def run_tests():
     except Exception as e:
         print(f"Test case 01 failed: {e}")
     else:
-        print("Test case 01 completed successfully.")
+        print("Login realizado com sucesso.")
     finally:
         login_test.close_browser()
 
@@ -31,7 +31,7 @@ def run_tests():
     except Exception as e:
         print(f"Test case 02 failed: {e}")
     else:
-        print("Test case 02 completed successfully.")
+        print("Email invalidado com sucesso.")
     finally:
         login_test.close_browser()
 
@@ -42,7 +42,7 @@ def run_tests():
     except Exception as e:
         print(f"Test case 03 failed: {e}")
     else:
-        print("Test case 03 completed sucesso.")
+        print("Senha invalidada com sucesso.")
     finally:
         login_test.close_browser()
 
