@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 from automation.data.user_data import UserData
 from automation.tests.login import Login
+from automation.tests.search_item import SearchItem
 import os
 
 load_dotenv()
@@ -9,9 +10,10 @@ load_dotenv()
 def run_tests():
     user = UserData()
     login_url = os.getenv("LOGIN_URL")
+    home_url = os.getenv("HOME_URL")
 
-    if not login_url:
-        raise ValueError("LOGIN_URL not set in .env file")
+    if not login_url or not home_url:
+        raise ValueError("LOGIN_URL or LOGIN_HOME not set in .env file")
 
     # Teste 01
     login_test = Login(user, login_url)
@@ -20,7 +22,7 @@ def run_tests():
     except Exception as e:
         print(f"Test case 01 failed: {e}")
     else:
-        print("Login realizado com sucesso.")
+        print("Test case 01 completed successfully.")
     finally:
         login_test.close_browser()
 
@@ -31,7 +33,7 @@ def run_tests():
     except Exception as e:
         print(f"Test case 02 failed: {e}")
     else:
-        print("Email invalidado com sucesso.")
+        print("Test case 02 completed successfully.")
     finally:
         login_test.close_browser()
 
@@ -42,9 +44,20 @@ def run_tests():
     except Exception as e:
         print(f"Test case 03 failed: {e}")
     else:
-        print("Senha invalidada com sucesso.")
+        print("Test case 03 completed successfully.")
     finally:
         login_test.close_browser()
+
+    # Teste de Adicionar ao Carrinho
+    search_test = SearchItem(user, home_url)
+    try:
+        search_test.test_case_search()
+    except Exception as e:
+        print(f"Test case search failed: {e}")
+    else:
+        print("Item buscado com sucesso.")
+    finally:
+        search_test.close_browser()  # Certifique-se de fechar o navegador após o teste
 
 
 if __name__ == "__main__":
